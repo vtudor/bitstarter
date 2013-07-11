@@ -28,6 +28,7 @@ var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
 
 var util = require('util');
+var restler = require('restler');
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
@@ -67,6 +68,14 @@ function url_get_callback(data)
 {
     fs.writeFile('urlfile.html', data);
     file = 'urlfile.html';
+
+//    console.log('data\n\n' + data);
+
+    var checkJson = checkHtmlFile(file, program.checks);
+    var outJson = JSON.stringify(checkJson, null, 4);
+
+    console.log('[' + file + ']');
+    console.log(outJson);
 }
 
 var url;
@@ -84,12 +93,21 @@ if(require.main == module) {
 
     if (url != null)
     {
-	restler.get(url).on('complete')
+	restler.get(url).on('complete', url_get_callback); /*function(data)
+			    {
+				fs.writeFile('urlfile.html', data);
+				file = 'urlfile.html';
+			    });*/
+    }
+    else
+    {
+	var checkJson = checkHtmlFile(file, program.checks);
+	var outJson = JSON.stringify(checkJson, null, 4);
+    
+	console.log('[' + file + ']');
+	console.log(outJson);
     }
     
-    var checkJson = checkHtmlFile(file, program.checks);
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
 } else {
     exports.checkHtmlFile = checkHtmlFile;
 }
