@@ -66,7 +66,7 @@ var clone = function(fn) {
 
 function url_get_callback(data)
 {
-    fs.writeFile('urlfile.html', data);
+    fs.writeFileSync('urlfile.html', data);
     file = 'urlfile.html';
 
 //    console.log('data\n\n' + data);
